@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    
+    <div class="background">
+        <div class="gradient"></div>
+    </div>
+    
+    <div class="main">
+        <nav>
+            <div class="logo"></div>
+            <h2>Birds of Aotearoa</h2>
+
+        </nav>
+
+        <section class="header">
+            <h1 class="head_text">Birds of <span class="orange_gradient">Aotearoa</span></h1>
+            <br/>
+            <p>Explore 68 species of New Zealand birds thanks to University of Otago in collaboration with The National Museum of NZ (Te Papa), the Department of Conservation (DOC) and
+            the Ornithological Society of NZ (Birds NZ) </p>
+        </section>
+
+
+        <section class="card_filtering">
+            
+            <h2>Filter Birds</h2>
+
+            <form action="">
+                <input type="text" id="search_input" name="search_input" placeholder="Search NZ Birds by Name ">
+            
+                <div class="filter_options">
+                    <label for="filter_conservation_status">Conservation Status:</label>
+                    <div class="filter_options_select">
+                        <select name="filter_conservation_status" id="filter_conservation_status">
+                            <!-- Dynamically populated dropdown using JS -->
+                            <option value="Any">Any</option>
+                        </select>
+                        <div class="dropdown_arrow"></div>
+                        <button type="button" class="help_icon" onclick="conservationKeyHelp()"></button>
+                    </div>
+                </div>
+            
+                <div class="filter_options">
+                    <label for="sort_cards">Sort By:</label>
+                    <div class="filter_options_select">
+                        <select name="sort_cards" id="sort_cards">
+                            <!-- Dynamically populated dropdown using JS -->
+                        </select>
+                        <div class="dropdown_arrow"></div>
+                        <button type="button" class="help_icon" onclick="sortByHelp()"></button>
+                    </div>
+                </div>
+            
+            </form>
+        </section>
+
+
+        <section class="all_cards_container">
+
+        </section>                
+
+
+    
+    </div>
+</body>
+
+<script src="./main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</html>
