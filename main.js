@@ -13,7 +13,6 @@ const conservationStatusColors = {
     "Extinct": "black",
     "Data Deficient": "black"
 }; 
-
 const sortOptions = [
     'Name A-Z',
     'Name Z-A',
@@ -22,6 +21,10 @@ const sortOptions = [
     'Smallest to Largest',
     'Largest to Smallest'
 ];
+
+// Default values 
+let currentData = {}; 
+let currentSort = 'Name A-Z';
 
 
 
@@ -66,7 +69,7 @@ const displayBirds = async ({type, query}) => {
     cardContainer.innerHTML = '';       // Clearing the card container
 
     // Filtering the birds by search query 
-    let filteredBirds = {}; 
+    let filteredBirds = currentData; 
     switch (type) {
         case 'search':
             filteredBirds = filterBirdsBySearch(allBirdData, query);
@@ -75,14 +78,13 @@ const displayBirds = async ({type, query}) => {
         case 'status':
             filteredBirds = filterBirdsByStatus(allBirdData, query);
             break; 
-
-        case `sort`:
-            filteredBirds = sortBirds(allBirdData, query);
-            break;
     
         default:
             break;
     }
+
+    // Sort the filteredBirds 
+    filteredBirds = sortBirds(filteredBirds, currentSort);
 
     // Displaying the cards
     filteredBirds.forEach((bird) => {
@@ -94,14 +96,20 @@ const displayBirds = async ({type, query}) => {
     if (filteredBirds.length === 0) {
         cardContainer.innerHTML = '<h3>No results found</h3>';
     }
+
+    currentData = filteredBirds;
 }
 
 const filterBirdsBySearch = (data, searchQuery) => {
     return data.filter((bird) => {
         const birdName = bird.primary_name.toLowerCase(); 
+        const englishName = bird.english_name.toLowerCase();
         const scientificName = bird.scientific_name.toLowerCase();
 
-        return birdName.includes(searchQuery.toLowerCase()) || scientificName.includes(searchQuery.toLowerCase());
+        return (birdName.includes(searchQuery.toLowerCase()) || 
+            scientificName.includes(searchQuery.toLowerCase()) || 
+            englishName.includes(searchQuery.toLowerCase())
+        );
     });
 }
 
@@ -135,12 +143,18 @@ const constructCard = (bird) => {
         <div class="glass_effect" style="background-image: url(${bird.photo.source});"></div>
 
         <div class="card_data">
-            <div class="card_img" style="background-image: url(${bird.photo.source});"></div>
+            <div class="card_img" style="background-image: url(${bird.photo.source});" alt="Photo by ${bird.photo.credit}">
+                <p class="photo_credit">Photo by ${bird.photo.credit}</p>
+            </div>
 
             <div class="card_text_container">
                 <h4>${bird.primary_name}</h4>
 
                 <table class="card_text">
+                    <tr>
+                        <td>English Name:</td>
+                        <td>${bird.english_name}</td>
+                    </tr>
                     <tr>
                         <td>Scientific Name:</td>
                         <td>${bird.scientific_name}</td>
@@ -214,7 +228,7 @@ searchBar.addEventListener('input', (event) => {
     const searchQuery = event.target.value;
     const payload = {
         type: 'search',
-        query: searchQuery
+        query: searchQuery,
     };
     displayBirds(payload);
 }); 
@@ -225,9 +239,10 @@ conservationStatusFilter.addEventListener('change', (event) => {
     const query = event.target.value;
     const payload = {
         type: 'status', 
-        query: query
+        query: query,
     };
-
+    
+    currentFilter = query;
     displayBirds(payload);
 });
 
@@ -235,12 +250,8 @@ conservationStatusFilter.addEventListener('change', (event) => {
 const sortFilter = document.getElementById('sort_cards');
 sortFilter.addEventListener('change', (event) => {
     const query = event.target.value;
-    const payload = {
-        type: 'sort',
-        query: query
-    };
-
-    displayBirds(payload);
+    currentSort = query;
+    displayBirds({ type: 'sort', query: query });
 })
 
 
@@ -248,7 +259,7 @@ const main = async () => {
     try {
         allBirdData = await fetchData();
         populateFilterInfo(); 
-        // 
+        currentData = allBirdData;
         displayBirds({type: 'search', query: ''});
     } catch (error) {
         console.error(error);
