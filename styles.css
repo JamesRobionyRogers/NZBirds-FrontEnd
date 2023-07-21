@@ -438,9 +438,12 @@ td {
 
 footer.credit {
     margin: 2rem 0; 
-    padding: 1rem; 
+    padding: 1rem;
+    
 }
 
 footer.credit p {
     margin: 0; 
+
+    font-size: 0.7rem;
 }
