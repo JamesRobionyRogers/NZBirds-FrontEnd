@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Birds of Aotearoa</title>
+
+    <link rel="icon" href="./assets/logos/logo.svg" type="image/svg+xml">
+    <link rel=”mask-icon” href=./assets/logos/logo.svg” color=”#000000">
     <link rel="stylesheet" href="./styles.css">
+    <script src="./main.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     
@@ -42,7 +47,15 @@
                             <option value="Any">Any</option>
                         </select>
                         <div class="dropdown_arrow"></div>
-                        <button type="button" class="help_icon" onclick="conservationKeyHelp()"></button>
+                        <button 
+                            type="button" 
+                            title="Conservation Status Key"
+                            class="help_icon tooltip" 
+                            onclick="conservationKeyHelp()" 
+                            style="text-decoration: none;"
+                        >
+                            <span class="tooltiptext">Help with Conservation Status</span>
+                        </button>
                     </div>
                 </div>
             
@@ -53,7 +66,14 @@
                             <!-- Dynamically populated dropdown using JS -->
                         </select>
                         <div class="dropdown_arrow"></div>
-                        <button type="button" class="help_icon" onclick="sortByHelp()"></button>
+                        <button 
+                            type="button" 
+                            title="Help for Sort By"
+                            class="help_icon tooltip" 
+                            onclick="sortByHelp()"
+                        >
+                            <span class="tooltiptext">Help with sorting</span>
+                        </button>
                     </div>
                 </div>
             
@@ -72,11 +92,6 @@
         </footer>
     
     </main>
-
-
-    
-    <script src="./main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>
