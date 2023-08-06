@@ -58,6 +58,7 @@ As far as I am aware, there are no unresolved issues with the website.
 ## Enhancements / Extra Features 
 
 - **Help Modal** - In order to keep a minimal design I opted to hide the conservation status key behind the `?` icon next to the filter. The help icon is also equipped with a CSS tooltip to improve the UX. I used the SweetAlert2 library for the modal for the modal. 
+
 ![Help modal images](./readme_assets/ExtraFeature.gif)
   
 
