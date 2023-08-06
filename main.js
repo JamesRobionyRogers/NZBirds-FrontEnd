@@ -25,6 +25,7 @@ const sortOptions = [
 // Default values 
 let currentData = {}; 
 let currentSort = sortOptions[0];
+let currentFilter = 'Any';
 
 
 
@@ -77,10 +78,12 @@ const displayBirds = async ({ type, query }) => {
     switch (type) {
         case 'search':
             filteredBirds = filterBirdsBySearch(allBirdData, query);
+            filteredBirds = filterBirdsByStatus(filteredBirds, currentFilter);
             break;
 
         case 'status':
             filteredBirds = filterBirdsByStatus(allBirdData, query);
+            filteredBirds = filterBirdsBySearch(filteredBirds, searchBar.value);
             break;
 
         default:
@@ -315,6 +318,15 @@ const sortByHelp = () => {
         showConfirmButton: false,
         focusConfirm: false,
     });
+}
+
+const resetFilters = () => {
+    searchBar.value = '';
+    conservationStatusFilter.value = 'Any';
+    sortFilter.value = sortOptions[0];
+    currentSort = sortOptions[0];
+    currentFilter = 'Any';
+    displayBirds({ type: 'search', query: '' });
 }
 
 // Adding an event listener to the search bar
