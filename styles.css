@@ -6,7 +6,8 @@
     --secondary_color: #0087DC;
     --accent_color: #002F4C;
 
-    --primary_font_col: rgb(75 85 99); 
+    --primary_font_col: rgb(75 85 99);  
+    --header_font_col: black;
 }
 
 
@@ -51,30 +52,39 @@ p {
 }
 
 .background:after {
-  content: "";
-  background-image: url("./assets/grid.svg");
-  z-index: 1;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  opacity: 0.3;
-  filter: invert(1);
+    content: "";
+    background-image: url("./assets/grid.svg");
+    z-index: 1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    opacity: 0.3;
+    filter: invert(1);
 }
 
 .gradient {
-  height: fit-content;
-  z-index: 3;
-  width: 100%;
-  max-width: 640px;
-  background-image: radial-gradient(at 27% 37%,hsla(215, 98%, 61%, 1) 0px, transparent 0%), radial-gradient(at 97% 21%, hsla(125, 98%, 72%, 1) 0px, transparent 50%), radial-gradient(at 52% 99%, hsla(354, 98%, 61%, 1) 0px, transparent 50%), radial-gradient(at 10% 29%, hsla(256, 96%, 67%, 1) 0px, transparent 50%), radial-gradient(at 97% 96%, hsla(38, 60%, 74%, 1) 0px, transparent 50%), radial-gradient(at 33% 50%, hsla(222, 67%, 73%, 1) 0px, transparent 50%), radial-gradient(at 79% 53%, hsla(343, 68%, 79%, 1) 0px, transparent 50%);
-  position: absolute;
-  content: "";
-  width: 100%;
-  height: 100%;
-  filter: blur(100px) saturate(150%);
-  top: 80px;
-  opacity: 0.15;
+    height: fit-content;
+    z-index: 3;
+    width: 100%;
+    max-width: 640px;
+    background-image: 
+        radial-gradient(at 27% 37%,hsla(215, 98%, 61%, 1) 0px, transparent 0%), 
+        radial-gradient(at 97% 21%, hsla(125, 98%, 72%, 1) 0px, transparent 50%), 
+        radial-gradient(at 52% 99%, hsla(354, 98%, 61%, 1) 0px, transparent 50%), 
+        radial-gradient(at 10% 29%, hsla(256, 96%, 67%, 1) 0px, transparent 50%), 
+        radial-gradient(at 97% 96%, hsla(38, 60%, 74%, 1) 0px, transparent 50%), 
+        radial-gradient(at 33% 50%, hsla(222, 67%, 73%, 1) 0px, transparent 50%), 
+        radial-gradient(at 79% 53%, hsla(343, 68%, 79%, 1) 0px, transparent 50%);
+        
+
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    filter: blur(100px) saturate(150%);
+    top: 80px;
+    opacity: 0.15;
 }
 
 nav {
@@ -84,9 +94,10 @@ nav {
     margin-bottom: 4rem;
     padding: 15px 10px; 
     z-index: 10; 
+    color: var(--header_font_col); 
 }
 
-nav .logo {
+.logo {
     width: 30px;
     height: 30px; 
     margin-right: 10px;
@@ -133,6 +144,8 @@ nav .logo {
 
     padding: 1rem;
     padding-top: 1.5rem;
+
+    max-width: 1600px;
 
     box-shadow: -1px -2px 21px -1px rgba(0, 0, 0, 0.4);
     -webkit-box-shadow: -1px -2px 21px -1px rgba(0, 0, 0, 0.4);
@@ -228,6 +241,7 @@ nav .logo {
     width: 15px;
     height: 15px;
     margin: 5px;
+    margin-left: 10px;
 
     background-image: url("./assets/help.svg");
     background-size: cover;
@@ -249,57 +263,31 @@ nav .logo {
     }
 }
 
-    /* .card_filtering {
-        padding: 2rem 2rem 1rem 2rem;
-        padding-top: 2rem;
-    }
-
-    .card_filtering form {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .card_filtering form input {
-        width: 90%;
-        margin-bottom: 1rem;
-    }
-
-    .card_filtering form label {
-        display: block; 
-        width: 100%; 
-    }
-
-    .card_filtering .filter_options {
-        width: 90%;
-        margin-bottom: 1rem;
-    }
-
-    .card_filtering .filter_options select {
-        display: inline-block; 
-        width: 95%; 
-    }
-
-    .card_filtering .filter_options .dropdown_arrow {
-        right: 40px; 
-    }
-
-    .card_filtering .filter_options .help_icon {
-        position: absolute;
-        top: 22px;
-        right: -10px;
-    } 
-} */
-
-
 .all_cards_container {
     display: grid;
     gap: 30px; 
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
 
     justify-items: stretch; 
     padding: 20px;
+    max-width: 1600px; 
+}
+
+@media only screen and (min-width: 1700px) {
+    .all_cards_container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media only screen and (min-width: 1600px) {
+    .all_cards_container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    header, .card_filtering, .all_cards_container, footer  {
+        max-width: 1600px;
+        margin: 0px auto;
+    }
 }
 
 @media only screen and (max-width: 1300px) {
@@ -336,7 +324,6 @@ nav .logo {
     height: 100%;
     position: relative;
 
-    background-image: url(https://images.unsplash.com/photo-1452570053594-1b985d6ea890?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80);
     background-size: cover;
     background-position: center;
 }
@@ -348,6 +335,8 @@ nav .logo {
     height: 100%;
     overflow: hidden; 
     border-radius: 10px;
+
+    
 
     backdrop-filter: blur(50px) brightness(70%) ;
     -webkit-backdrop-filter: blur(50px) brightness(70%);
@@ -446,4 +435,79 @@ footer.credit p {
     margin: 0; 
 
     font-size: 0.7rem;
+}
+
+/* SweetAlert HTML Styling */
+
+#swal2-html-container > table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-radius: 3px;
+    margin: 0;
+    padding: 0;
+
+    /* background-color: rgba(0, 47, 76, 0.15); */
+    overflow: hidden; 
+
+}
+
+#swal2-html-container > table > thead {
+    /* background-color: rgba(0, 47, 76, 0.25); */
+    border-radius: 10px;
+}
+
+/* Adding a space between tbody and thead */
+#swal2-html-container>table>tbody:before {
+    content: ".";
+    display: block;
+    line-height: 10px;
+    color: transparent;
+}
+
+
+/* Tooltip styles */
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    font-family: 'Roboto', sans-serif;
+
+    visibility: hidden;
+    opacity: 0;
+    width: 120px;
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -60px;
+
+    -webkit-transition: opacity 0.3s ease-in-out;
+    -moz-transition: opacity 0.3s ease-in-out;
+    -o-transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.75) transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
 }
