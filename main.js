@@ -14,8 +14,8 @@ const conservationStatusColors = {
     "Data Deficient": "black"
 }; 
 const sortOptions = [
-    'Name A-Z',
-    'Name Z-A',
+    'Alphabetical A-Z',
+    'Alphabetical Z-A',
     'Lightest to Heaviest',
     'Heaviest to Lightest',
     'Smallest to Largest',
@@ -24,7 +24,7 @@ const sortOptions = [
 
 // Default values 
 let currentData = {}; 
-let currentSort = 'Name A-Z';
+let currentSort = sortOptions[0];
 
 
 
@@ -64,12 +64,16 @@ const populateFilterInfo = () => {
     });
 }
 
-const displayBirds = async ({type, query}) => {
+const displayBirds = async ({ type, query }) => {
     const cardContainer = document.querySelector('.all_cards_container');
-    cardContainer.innerHTML = '';       // Clearing the card container
+
+    // Clearing the card container
+    while (cardContainer.firstChild) {
+        cardContainer.removeChild(cardContainer.firstChild);
+    }
 
     // Filtering the birds by search query 
-    let filteredBirds = currentData; 
+    let filteredBirds = currentData;
     switch (type) {
         case 'search':
             filteredBirds = filterBirdsBySearch(allBirdData, query);
@@ -77,8 +81,8 @@ const displayBirds = async ({type, query}) => {
 
         case 'status':
             filteredBirds = filterBirdsByStatus(allBirdData, query);
-            break; 
-    
+            break;
+
         default:
             break;
     }
@@ -86,11 +90,19 @@ const displayBirds = async ({type, query}) => {
     // Sort the filteredBirds 
     filteredBirds = sortBirds(filteredBirds, currentSort);
 
-    // Displaying the cards
+    // Using document fragment for more efficient DOM manipulation
+    const cardFragment = document.createDocumentFragment();
+
+    // Creating and appending cards to the fragment
     filteredBirds.forEach((bird) => {
-        const card = constructCard(bird); 
-        cardContainer.innerHTML += card;
+        const card = constructCard(bird);
+        const cardElement = document.createElement('div');
+        cardElement.innerHTML = card; // If you need to parse HTML content
+        cardFragment.appendChild(cardElement);
     });
+
+    // Appending the fragment to the container
+    cardContainer.appendChild(cardFragment);
 
     // Display a message for no results
     if (filteredBirds.length === 0) {
@@ -98,17 +110,19 @@ const displayBirds = async ({type, query}) => {
     }
 
     currentData = filteredBirds;
-}
+};
 
 const filterBirdsBySearch = (data, searchQuery) => {
     return data.filter((bird) => {
         const birdName = bird.primary_name.toLowerCase(); 
         const englishName = bird.english_name.toLowerCase();
         const scientificName = bird.scientific_name.toLowerCase();
+        const otherNames = bird.other_names.map((name) => name.toLowerCase());
 
         return (birdName.includes(searchQuery.toLowerCase()) || 
             scientificName.includes(searchQuery.toLowerCase()) || 
-            englishName.includes(searchQuery.toLowerCase())
+            englishName.includes(searchQuery.toLowerCase()) ||
+            otherNames.includes(searchQuery.toLowerCase())
         );
     });
 }
@@ -122,16 +136,32 @@ const filterBirdsByStatus = (data, status) => {
 const sortBirds = (data, sortBy) => {
     return data.sort((a, b) => {
         switch (sortBy) {
-            case 'Name A-Z':
+            // Alphabetical A-Z
+            case sortOptions[0]:
                 return a.primary_name.localeCompare(b.primary_name);
-                break;
             
-            case 'Name Z-A':
+            // Alphabetical Z-A
+            case sortOptions[1]:
                 return b.primary_name.localeCompare(a.primary_name);
-                break;
+
+            // Lightest to Heaviest
+            case sortOptions[2]:
+                return a.size.weight.value - b.size.weight.value;
+
+            // Heaviest to Lightest
+            case sortOptions[3]:
+                return b.size.weight.value - a.size.weight.value;
+                
+            // Smallest to Largest
+            case sortOptions[4]:
+                return a.size.length.value - b.size.length.value;
+
+            // Largest to Smallest
+            case sortOptions[5]:
+                return b.size.length.value - a.size.length.value;
 
             default: 
-                break;
+                return; 
         }
     });
 }
@@ -194,31 +224,96 @@ const conservationKeyHelp = () => {
     Swal.fire({
         title: 'Conservation Status Key',
         html: `
-        <table><thead><tr><th>Status Key</th><th>Hex Code</th><th style="text-align:center">Colour</th></tr></thead><tbody><tr><td>Not Threatened</td><td><code>#02a028</code></td><td style="text-align:center"><div style="border:2px solid #000;background:#02a028;width:16px;height:16px;display:inline-block"></div></td></tr><tr><td>Naturally Uncommon</td><td><code>#649a31</code></td><td style="text-align:center"><div style="border:2px solid #000;background:#649a31;width:16px;height:16px;display:inline-block"></div></td></tr><tr><td>Relict</td><td><code>#99cb68</code></td><td style="text-align:center"><div style="border:2px solid #000;background:#99cb68;width:16px;height:16px;display:inline-block"></div></td></tr><tr><td>Recovering</td><td><code>#fecc33</code></td><td style="text-align:center"><div style="border:2px solid #000;background:#fecc33;width:16px;height:16px;display:inline-block"></div></td></tr><tr><td>Declining</td><td><code>#fe9a01</code></td><td style="text-align:center"><div style="border:2px solid #000;background:#fe9a01;width:16px;height:16px;display:inline-block"></div></td></tr><tr><td>Nationally Increasing</td><td><code>#c26967</code></td><td style="text-align:center"><div style="border:2px solid #000;background:#c26967;width:16px;height:16px;display:inline-block"></div></td></tr><tr><td>Nationally Vulnerable</td><td><code>#9b0000</code></td><td style="text-align:center"><div style="border:2px solid #000;background:#9b0000;width:16px;height:16px;display:inline-block"></div></td></tr><tr><td>Nationally Endangered</td><td><code>#660032</code></td><td style="text-align:center"><div style="border:2px solid #000;background:#660032;width:16px;height:16px;display:inline-block"></div></td></tr><tr><td>Nationally Critical</td><td><code>#320033</code></td><td style="text-align:center"><div style="border:2px solid #000;background:#320033;width:16px;height:16px;display:inline-block"></div></td></tr><tr><td>Extinct</td><td><code>black</code></td><td style="text-align:center"><div style="border:2px solid #000;background:#000;width:16px;height:16px;display:inline-block"></div></td></tr><tr><td>Data Deficient</td><td><code>black</code></td><td style="text-align:center"><div style="border:2px solid #000;background:#000;width:16px;height:16px;display:inline-block"></div></td></tr></tbody></table>
+        <table>
+            <thead>
+                <tr>
+                    <th>Status Key</th>
+                    <th style="text-align:center">Colour</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Not Threatened</td>
+                    <td style="text-align:center">
+                        <div style="border:2px solid #000;background:#02a028;width:16px;height:16px;display:inline-block"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Naturally Uncommon</td>
+                    <td style="text-align:center">
+                        <div style="border:2px solid #000;background:#649a31;width:16px;height:16px;display:inline-block"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Relict</td>
+                    <td style="text-align:center">
+                        <div style="border:2px solid #000;background:#99cb68;width:16px;height:16px;display:inline-block"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Recovering</td>
+                    <td style="text-align:center">
+                        <div style="border:2px solid #000;background:#fecc33;width:16px;height:16px;display:inline-block"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Declining</td>
+                    <td style="text-align:center">
+                        <div style="border:2px solid #000;background:#fe9a01;width:16px;height:16px;display:inline-block"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Nationally Increasing</td>
+                    <td style="text-align:center">
+                        <div style="border:2px solid #000;background:#c26967;width:16px;height:16px;display:inline-block"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Nationally Vulnerable</td>
+                    <td style="text-align:center">
+                        <div style="border:2px solid #000;background:#9b0000;width:16px;height:16px;display:inline-block"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Nationally Endangered</td>
+                    <td style="text-align:center">
+                        <div style="border:2px solid #000;background:#660032;width:16px;height:16px;display:inline-block"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Nationally Critical</td>
+                    <td style="text-align:center">
+                        <div style="border:2px solid #000;background:#320033;width:16px;height:16px;display:inline-block"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Extinct</td>
+                    <td style="text-align:center">
+                        <div style="border:2px solid #000;background:#000;width:16px;height:16px;display:inline-block"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Data Deficient</td>
+                    <td style="text-align:center">
+                        <div style="border:2px solid #000;background:#000;width:16px;height:16px;display:inline-block"></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
         `,
         showCloseButton: true,
         showConfirmButton: false,
         focusConfirm: false,
-        customClass: {
-            container: 'conservation_key_container',
-            title: 'conservation_key_title',
-            closeButton: 'conservation_key_close_button'
-        }
     })
 }
 
 const sortByHelp = () => {
     Swal.fire({
-        title: 'Sort Birds By: Help',
-        text: 'Sort birds by a given parameter.',
+        title: 'Sort By',
+        text: 'Use this filter to sort the birds by a specific attribute. For example, you can sort the birds by their weight from lightest to heaviest.',
         showCloseButton: true,
         showConfirmButton: false,
         focusConfirm: false,
-        customClass: {
-            container: 'conservation_key_container',
-            title: 'conservation_key_title',
-            closeButton: 'conservation_key_close_button'
-        }
     });
 }
 
